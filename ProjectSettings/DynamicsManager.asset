@@ -11,11 +11,11 @@ PhysicsManager:
   m_DefaultContactOffset: 0.5
   m_DefaultSolverIterations: 24
   m_DefaultSolverVelocityIterations: 4
-  m_QueriesHitBackfaces: 0
+  m_QueriesHitBackfaces: 1
   m_QueriesHitTriggers: 1
   m_EnableAdaptiveForce: 1
   m_ClothInterCollisionDistance: 10
-  m_ClothInterCollisionStiffness: 0.5
+  m_ClothInterCollisionStiffness: 5
   m_ContactsGeneration: 1
   m_LayerCollisionMatrix: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   m_AutoSimulation: 1
