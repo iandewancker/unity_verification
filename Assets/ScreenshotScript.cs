@@ -1,47 +1,50 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+using System.IO;
 public class ScreenshotScript : MonoBehaviour
-
 {
-    public int resWidth = 2550;
-    public int resHeight = 3300;
 
-    private bool takeHiResShot = false;
 
-    public static string ScreenShotName(int width, int height)
+    private Camera myCamera;
+    private static ScreenshotScript instance;
+    private bool takeScreenshotOnNextFrame;
+
+    private void Awake()
     {
-        return string.Format("{0}/screenshots/screen_{1}x{2}_{3}.png",
-                             Application.dataPath,
-                             width, height,
-                             System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+        instance = this;
+        myCamera = gameObject.GetComponent<Camera>();
     }
-
-    public void TakeHiResShot()
+    private void OnPostRender()
     {
-        takeHiResShot = true;
-    }
-
-    void LateUpdate()
-    {
-        takeHiResShot |= Input.GetKeyDown("k");
-        if (takeHiResShot)
+        if (takeScreenshotOnNextFrame)
         {
-            RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
-            GetComponent<Camera>().targetTexture = rt;
-            Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
-            GetComponent<Camera>().Render();
-            RenderTexture.active = rt;
-            screenShot.ReadPixels(new Rect(0, 0, resWidth, resHeight), 0, 0);
-            GetComponent<Camera>().targetTexture = null;
-            RenderTexture.active = null; // JC: added to avoid errors
-            Destroy(rt);
-            byte[] bytes = screenShot.EncodeToPNG();
-            string filename = ScreenShotName(resWidth, resHeight);
-            System.IO.File.WriteAllBytes(filename, bytes);
-            Debug.Log(string.Format("Took screenshot to: {0}", filename));
-            takeHiResShot = false;
+            takeScreenshotOnNextFrame = false;
+            RenderTexture renderTexture = myCamera.targetTexture;
+
+            Texture2D renderResult = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.ARGB32, false);
+            Rect rect = new Rect(0, 0, renderTexture.width, renderTexture.height);
+            renderResult.ReadPixels(rect, 0, 0);
+            byte[] byteArray = renderResult.EncodeToPNG();
+            System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot.png", byteArray);
+            Debug.Log("Saved CameraScreenshot.png");
+
+            RenderTexture.ReleaseTemporary(renderTexture);
+            myCamera.targetTexture = null;
+        }
+    }
+    private void TakeScreenshot(int width, int height)
+    {
+        myCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
+        takeScreenshotOnNextFrame = true;
+    }
+    public static void TakeScreenshot_Static(int width, int height)
+    {
+        instance.TakeScreenshot(width, height);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            ScreenshotScript.TakeScreenshot_Static(50, 50);
         }
     }
 }
