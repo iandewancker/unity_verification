@@ -17365,6 +17365,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 728e444dcb75d4730aeaab40429fad12, type: 3}
   - {fileID: 2800000, guid: ec653639664b3dd49aad5931d5aac094, type: 3}
   - {fileID: 2800000, guid: 9ff9c03b5ff7e80468211aedb1e7092b, type: 3}
+  - {fileID: 2800000, guid: 9ff9c03b5ff7e80468211aedb1e7092b, type: 3}
   currentTexture: 0
 --- !u!1 &1275718523
 GameObject:
